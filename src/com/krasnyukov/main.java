@@ -39,8 +39,6 @@ public class main {
             System.out.println("Введите месяц: ");
             inputString = scanner.next();
 
-            //добавить проверку ввода
-
             if (!inputString.matches("[-+]?\\d+")) {
                 System.out.println("Введите число");
                 continue;
