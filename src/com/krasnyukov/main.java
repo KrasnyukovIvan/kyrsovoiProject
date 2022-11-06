@@ -1,5 +1,9 @@
 package com.krasnyukov;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,16 +13,27 @@ import java.util.Scanner;
 
 public class main {
     public static void main(String[] args) throws ParseException {
-        List<ZNAK> list = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        list.add(new ZNAK("Краснюков", "Иван", ZnakZodiaka.Scales, simpleDateFormat.parse("21.10.2000")));
-        list.add(new ZNAK("Гладков", "Кирилл", ZnakZodiaka.Virgo, simpleDateFormat.parse("27.08.2000")));
-        list.add(new ZNAK("Мухонько", "Илья", ZnakZodiaka.Fish, simpleDateFormat.parse("25.03.2000")));
+        List<ZNAK> staffList = new ArrayList<>();
+        try(FileReader fileReader = new FileReader("Staff.txt")) {
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                staffList.add(new ZNAK(line.split(" ")));
+                line = bufferedReader.readLine();
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Для выхода из программы нажмите z");
         Scanner scanner = new Scanner(System.in);
         String inputString = "";
+        int numMonth;
 
         while (!inputString.equals("z")) {
             System.out.println("Введите месяц: ");
@@ -26,17 +41,34 @@ public class main {
 
             //добавить проверку ввода
 
+            if (!inputString.matches("[-+]?\\d+")) {
+                System.out.println("Введите число");
+                continue;
+            } else {
+                numMonth = Integer.parseInt(inputString);
+                if (numMonth > 12 || numMonth < 1) {
+                    System.out.println("Введите корректный месяц");
+                    continue;
+                }
+                if (inputString.length() == 1) {
+                    inputString = "0" + inputString;
+                }
+            }
+
+
             SimpleDateFormat format = new SimpleDateFormat("MM");
             Boolean notFound = true;
-            for (ZNAK element: list) {
-                if (format.format(element.getBirthday()).equals(inputString)) {
-                    System.out.println(element.getfName());
+            for (ZNAK elem: staffList) {
+                if (format.format(elem.getBirthday()).equals(inputString)) {
+                    System.out.println("У сотрудника " + elem.getlName()
+                                        + " знак зодиака - " + elem.getznakZodika()
+                                        + ", так как он родился " + format.format(elem.getBirthday()));
                     notFound = false;
                 }
             }
 
             if (notFound) {
-                System.out.println("Таких сотрудников нет");
+                System.out.println("Нет сотрудников родившихся в данный месяц");
             }
         }
     }

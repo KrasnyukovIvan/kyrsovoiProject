@@ -24,4 +24,13 @@ public enum ZnakZodiaka {
     public String toString() {
         return rusNameZnakZodiaka;
     }
+
+    public static ZnakZodiaka fromString(String rusNameZnakZodiaka) {
+        for (ZnakZodiaka elem : ZnakZodiaka.values()) {
+            if (elem.toString().equals(rusNameZnakZodiaka)) {
+                return elem;
+            }
+        }
+        return null;
+    }
 }
