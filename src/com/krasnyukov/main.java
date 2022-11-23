@@ -1,23 +1,16 @@
 package com.krasnyukov;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.ParseException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
 public class main {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
         List<ZNAK> staffList = new ArrayList<>();
-        try(FileReader fileReader = new FileReader("Staff.txt")) {
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
+        try(FileInputStream fileReader = new FileInputStream("Staff.txt")) {
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(fileReader, "utf8"));
             String line = bufferedReader.readLine();
             while (line != null) {
                 staffList.add(new ZNAK(line.split(" ")));
@@ -69,5 +62,7 @@ public class main {
                 System.out.println("Нет сотрудников родившихся в данный месяц");
             }
         }
+
+
     }
 }
